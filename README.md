@@ -1,0 +1,2 @@
+# Eventide.NotificationService
+Сервис уведомлений
