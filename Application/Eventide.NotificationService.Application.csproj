@@ -4,6 +4,7 @@
     <ProjectReference Include="..\Domain\Eventide.NotificationService.Domain.csproj" />
     <ProjectReference Include="..\Contracts\Eventide.NotificationService.Contracts.csproj" />
     <ProjectReference Include="..\..\Eventide.TournamentService\Contracts\Eventide.TournamentService.Contracts.csproj" />
+    <ProjectReference Include="..\..\Eventide.MatchService\Contracts\Eventide.MatchService.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

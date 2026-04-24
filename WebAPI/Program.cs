@@ -11,6 +11,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<TournamentCreatedConsumer>();
+    x.AddConsumer<MatchCompletedConsumer>();
     
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -23,6 +24,11 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("tournament-created-queue", e =>
         {
             e.ConfigureConsumer<TournamentCreatedConsumer>(context);
+        });
+        
+        cfg.ReceiveEndpoint("match-completed-queue", e =>
+        {
+            e.ConfigureConsumer<MatchCompletedConsumer>(context);
         });
     });
 });
