@@ -24,9 +24,9 @@ public class Administrator(Guid id, Username username) : Entity<Guid>(id)
         Username = newUsername;
         return true;
     }
-    public Notification CreateNotification(User recipientUser, Title title, Body body, NotificationType type, RelatedEntityTypeName? relatedEntityType = null, Guid? relatedEntityId = null)
+    public Notification CreateNotification(User recipientUser, Title title, Body body, NotificationType type, RelatedEntityTypeName? relatedEntityType = null, RelatedEntity? relatedEntity = null)
     {
-        var notification = new Notification(recipientUser, title, body, type, DateTime.UtcNow, relatedEntityType, relatedEntityId);
+        var notification = new Notification(recipientUser, title, body, type, DateTime.UtcNow, relatedEntityType, relatedEntity);
         _notifications.Add(notification);
         return notification;
     }

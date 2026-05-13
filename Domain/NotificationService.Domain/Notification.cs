@@ -14,13 +14,13 @@ public class Notification : Entity<Guid>
     public bool IsRead { get; private set; }
     public DateTime? ReadAt { get; private set; }
     public RelatedEntityTypeName? RelatedEntityType { get; private set; }
-    public Guid? RelatedEntityId { get; private set; }
+    public RelatedEntity? RelatedEntity { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
     protected Notification()
     {
     }
-    public Notification(User recipientUser, Title title, Body body, NotificationType type, DateTime createdAt, RelatedEntityTypeName? relatedEntityType = null, Guid? relatedEntityId = null) : base(Guid.NewGuid())
+    public Notification(User recipientUser, Title title, Body body, NotificationType type, DateTime createdAt, RelatedEntityTypeName? relatedEntityType = null, RelatedEntity? relatedEntity = null) : base(Guid.NewGuid())
     {
         RecipientUser = recipientUser;
         Title = title;
@@ -29,7 +29,7 @@ public class Notification : Entity<Guid>
         IsRead = false;
         ReadAt = null;
         RelatedEntityType = relatedEntityType;
-        RelatedEntityId = relatedEntityId;
+        RelatedEntity = relatedEntity;
         CreatedAt = createdAt;
     }
 
@@ -43,7 +43,7 @@ public class Notification : Entity<Guid>
         bool isRead = false,
         DateTime? readAt = null,
         RelatedEntityTypeName? relatedEntityType = null,
-        Guid? relatedEntityId = null) : base(id)
+        RelatedEntity? relatedEntity = null) : base(id)
     {
         RecipientUser = recipientUser ?? throw new ArgumentNullValueException(nameof(recipientUser));
         Title = title ?? throw new ArgumentNullValueException(nameof(title));
@@ -52,7 +52,7 @@ public class Notification : Entity<Guid>
         IsRead = isRead ;
         ReadAt = readAt ?? throw new ArgumentNullValueException(nameof(readAt));
         RelatedEntityType = relatedEntityType ?? throw new ArgumentNullValueException(nameof(relatedEntityType));
-        RelatedEntityId = relatedEntityId ?? throw new ArgumentNullValueException(nameof(relatedEntityId));
+        RelatedEntity = relatedEntity ?? throw new ArgumentNullValueException(nameof(relatedEntity));
         CreatedAt = createdAt ;
     }
 
@@ -62,21 +62,21 @@ public class Notification : Entity<Guid>
         Body body,
         NotificationType type,
         RelatedEntityTypeName? relatedEntityType = null,
-        Guid? relatedEntityId = null)
+        RelatedEntity? relatedEntity = null)
     {
         if (recipientUser == null) throw new ArgumentNullValueException(nameof(recipientUser));
         if (title == null) throw new ArgumentNullValueException(nameof(title));
         if (body == null) throw new ArgumentNullValueException(nameof(body));
         if (type == null) throw new ArgumentNullValueException(nameof(type));
         if (relatedEntityType == null) throw new ArgumentNullValueException(nameof(relatedEntityType));
-        if (relatedEntityId == null) throw new ArgumentNullValueException(nameof(relatedEntityId));
+        if (relatedEntity == null) throw new ArgumentNullValueException(nameof(relatedEntity));
 
         if (RecipientUser == recipientUser &&
             Title == title &&
             Body == body &&
             Type == type &&
             RelatedEntityType == relatedEntityType &&
-            RelatedEntityId == relatedEntityId)
+            RelatedEntity == relatedEntity)
         {
             return false;
         }
@@ -86,7 +86,7 @@ public class Notification : Entity<Guid>
         Body = body;
         Type = type;
         RelatedEntityType = relatedEntityType;
-        RelatedEntityId = relatedEntityId;
+        RelatedEntity = relatedEntity;
 
         return true;
     }
@@ -119,6 +119,6 @@ public class Notification : Entity<Guid>
 
     public override string ToString()
     {
-        return $"Notification: Title={Title}, Type={Type}, IsRead={IsRead}, RecipientUser={RecipientUser}, RelatedEntityType={RelatedEntityType}, RelatedEntityId={RelatedEntityId}";
+        return $"Notification: Title={Title}, Type={Type}, IsRead={IsRead}, RecipientUser={RecipientUser}, RelatedEntityType={RelatedEntityType}, RelatedEntity={RelatedEntity}";
     }
 }
