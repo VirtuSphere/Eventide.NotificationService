@@ -27,6 +27,7 @@ public class Administrator(Guid id, Username username) : Entity<Guid>(id)
     public Notification CreateNotification(User recipientUser, Title title, Body body, NotificationType type, RelatedEntityTypeName? relatedEntityType = null, RelatedEntity? relatedEntity = null)
     {
         var notification = new Notification(recipientUser, title, body, type, DateTime.UtcNow, this, relatedEntityType, relatedEntity);
+        if (_notifications.Contains(notification)) throw new NotificationNotFoundException(notification.Id);
         _notifications.Add(notification);
         return notification;
     }
