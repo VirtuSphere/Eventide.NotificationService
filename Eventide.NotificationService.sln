@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{996CEB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{A73F2606-6D4C-3EEE-1759-0E59DCFEF523}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventide.NotificationService.Contracts", "Contracts\Eventide.NotificationService.Contracts.csproj", "{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainApp", "Domain\DomainApp\DomainApp.csproj", "{0EF0C0D9-4B94-01EB-4B96-AE9D640414FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Domain", "Domain\NotificationService.Domain\NotificationService.Domain.csproj", "{19B59645-0611-DDCE-B7C7-7988763C79F7}"
@@ -36,17 +34,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Debug|x64.Build.0 = Debug|Any CPU
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Debug|x86.Build.0 = Debug|Any CPU
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Release|x64.ActiveCfg = Release|Any CPU
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Release|x64.Build.0 = Release|Any CPU
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Release|x86.ActiveCfg = Release|Any CPU
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E}.Release|x86.Build.0 = Release|Any CPU
 		{0EF0C0D9-4B94-01EB-4B96-AE9D640414FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0EF0C0D9-4B94-01EB-4B96-AE9D640414FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EF0C0D9-4B94-01EB-4B96-AE9D640414FF}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -124,7 +111,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{0563A19F-1C82-4F0A-97EE-EF9D4D9C6A4E} = {A73F2606-6D4C-3EEE-1759-0E59DCFEF523}
 		{0EF0C0D9-4B94-01EB-4B96-AE9D640414FF} = {996CEBED-A05B-5D42-3FF0-982E087A2599}
 		{19B59645-0611-DDCE-B7C7-7988763C79F7} = {996CEBED-A05B-5D42-3FF0-982E087A2599}
 		{CC0E8636-ECCF-5CB2-3E71-6ECEFFF5F751} = {996CEBED-A05B-5D42-3FF0-982E087A2599}

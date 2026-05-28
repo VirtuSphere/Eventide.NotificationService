@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using NotificationService.Domain.Repositories.Abstractions.Base;
+using NotificationService.Domain.Repositories.Abstractions.Repositories;
 using NotificationService.Infrastructure.EntityFramework;
+using NotificationService.Infrastructure.EntityFramework.RepositoriesEF;
 using NotificationService.WebHost.Helpers;
 
 
@@ -36,6 +39,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     {
         options.UseNpgsql(connectionString);
     });
+
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
+builder.Services.AddScoped<IAdministratorRepository, EfAdministratorRepository>();
+builder.Services.AddScoped<IUserRepository, EfUserRepository>();
+builder.Services.AddScoped<IRelatedEntityRepository, EfRelatedEntityRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

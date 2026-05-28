@@ -60,6 +60,7 @@ Exceptions/
  ArgumentNullValueException.cs
  NotificationBodyNullException.cs
  NotificationCreatedAtInvalidException.cs
+ NotificationNotFoundException.cs
  NotificationReadStateInvalidException.cs
  NotificationRecipientUserIdEmptyException.cs
  NotificationRelatedEntityReferenceInvalidException.cs
