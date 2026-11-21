@@ -71,8 +71,6 @@ public class Notification : Entity<Guid>
         if (title == null) throw new ArgumentNullValueException(nameof(title));
         if (body == null) throw new ArgumentNullValueException(nameof(body));
         if (type == null) throw new ArgumentNullValueException(nameof(type));
-        if (relatedEntityType == null) throw new ArgumentNullValueException(nameof(relatedEntityType));
-        if (relatedEntity == null) throw new ArgumentNullValueException(nameof(relatedEntity));
 
         if (RecipientUser == recipientUser &&
             Title == title &&

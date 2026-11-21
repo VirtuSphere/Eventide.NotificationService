@@ -23,6 +23,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\NotificationService.Infrastructure.EntityFramework\NotificationService.Infrastructure.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\Application\NotificationService.Application.Models\NotificationService.Application.Models.csproj" />
+    <ProjectReference Include="..\..\Application\NotificationService.Application.Services\NotificationService.Application.Services.csproj" />
   </ItemGroup>
 
 </Project>

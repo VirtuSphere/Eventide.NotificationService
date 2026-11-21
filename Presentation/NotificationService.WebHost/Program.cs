@@ -1,7 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using NotificationService.Domain.Repositories.Abstractions.Base;
+using NotificationService.Domain.Repositories.Abstractions.Repositories;
 using NotificationService.Infrastructure.EntityFramework;
+using NotificationService.Infrastructure.EntityFramework.RepositoriesEF;
 using NotificationService.WebHost.Helpers;
+using NotificationService.Application.Services;
+using NotificationService.Application.Services.Abstractions;
+using NotificationService.Application.Services.Mapping;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,20 +43,30 @@ builder.Services.AddDbContext<ApplicationDbContext>(
         options.UseNpgsql(connectionString);
     });
 
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
+builder.Services.AddScoped<IAdministratorRepository, EfAdministratorRepository>();
+builder.Services.AddScoped<IUserRepository, EfUserRepository>();
+builder.Services.AddScoped<IRelatedEntityRepository, EfRelatedEntityRepository>();
+builder.Services.AddScoped<INotificationRepository, EfNotificationRepository>();
+builder.Services.AddScoped<IUserApplicationService, UserApplicationService>();
+builder.Services.AddScoped<IAdministratorApplicationService, AdministratorApplicationService>();
+builder.Services.AddScoped<IRelatedEntityApplicationService, RelatedEntityApplicationService>();
+builder.Services.AddScoped<INotificationApplicationService, NotificationApplicationService>();
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile<ApplicationProfile>();
+});
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 //app.UseHttpsRedirection();
 
