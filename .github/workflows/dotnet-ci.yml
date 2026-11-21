@@ -1,0 +1,64 @@
+name: .NET CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore Eventide.NotificationService.sln
+
+      - name: Build
+        run: dotnet build Eventide.NotificationService.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test Tests/NotificationService.Tests.csproj --configuration Release --collect:"XPlat Code Coverage"
+
+      - name: Enforce 80 percent coverage
+        shell: pwsh
+        run: |
+          $coverageFile = Get-ChildItem -Recurse -Filter coverage.cobertura.xml |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+
+          if ($null -eq $coverageFile) {
+            throw "Coverage report was not generated."
+          }
+
+          [xml]$coverage = Get-Content $coverageFile.FullName
+          $lineRate = [double]$coverage.coverage.'line-rate'
+          $percentage = [math]::Round($lineRate * 100, 2)
+          Write-Host "Line coverage: $percentage%"
+
+          if ($lineRate -lt 0.80) {
+            throw "Line coverage $percentage% is below the required 80%."
+          }
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: Tests/TestResults/**/coverage.cobertura.xml
+          if-no-files-found: error

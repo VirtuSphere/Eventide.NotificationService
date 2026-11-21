@@ -1,0 +1,96 @@
+version=2.3
+
+# This file caches language service data to improve the performance of C# Dev Kit.
+# It is not intended for manual editing. It can safely be deleted and will be
+# regenerated automatically. For more information, see https://aka.ms/lscache
+#
+# To control where cache files are stored, use the following VS Code setting:
+#   "dotnet.projectsystem.cacheInProjectFolder": true
+
+[project]
+project=DomainApp.csproj
+language=C#
+primary
+lastDtbSucceeded
+
+[properties]
+AssemblyName=DomainApp
+BaseIntermediateOutputPath=obj/
+BaseOutputPath=bin/
+DebugSymbols=true
+EnableHotReloadInRuntimeConfigDevFile=true
+HotReloadBrowserToolsEnabled=false
+IntermediateOutputPath=obj/Debug/net8.0/
+MaxSupportedLangVersion=12.0
+Optimize=false
+OutputType=Exe
+ProjectAssetsFile=<PATH>obj/project.assets.json
+RootNamespace=DomainApp
+TargetFramework=net8.0
+TargetFrameworkIdentifier=.NETCoreApp
+TargetFrameworkVersion=v8.0
+TargetPath=<PATH>bin/Debug/net8.0/DomainApp.dll
+TargetRefPath=<PATH>obj/Debug/net8.0/ref/DomainApp.dll
+TemporaryDependencyNodeTargetIdentifier=net8.0
+
+[commandLineArguments]
+/noconfig
+/unsafe-
+/checked-
+/nowarn:1701,1702,1701,1702,8002
+/fullpaths
+/nostdlib+
+/errorreport:prompt
+/warn:8
+/define:TRACE;DEBUG;NET;NET8_0;NETCOREAPP;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP1_0_OR_GREATER;NETCOREAPP1_1_OR_GREATER;NETCOREAPP2_0_OR_GREATER;NETCOREAPP2_1_OR_GREATER;NETCOREAPP2_2_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER
+/highentropyva+
+/nullable:enable
+/debug+
+/debug:portable
+/filealign:512
+/optimize-
+/out:obj/Debug/net8.0/DomainApp.dll
+/refout:obj/Debug/net8.0/refint/DomainApp.dll
+/target:exe
+/warnaserror-
+/utf8output
+/deterministic+
+/langversion:12.0
+/warnaserror+:NU1605,SYSLIB0011
+
+[sourceFiles]
+obj/Debug/net8.0/
+ .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+ DomainApp.AssemblyInfo.cs
+ DomainApp.GlobalUsings.g.cs
+Program.cs
+
+[frameworkPacks]
+Microsoft.NETCore.App.Ref
+
+[metadataReferences]
+../
+ NotificationService.Domain/obj/Debug/net8.0/ref/NotificationService.Domain.dll
+ NotificationService.ValueObjects/obj/Debug/net8.0/ref/NotificationService.ValueObjects.dll
+
+[analyzerReferences]
+<NETSDK>/Sdks/Microsoft.NET.Sdk/analyzers/
+ Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll
+ Microsoft.CodeAnalysis.NetAnalyzers.dll
+
+[sdkAnalyzerConfigPolicy]
+Microsoft.NET.Sdk/analyzers
+
+[analyzerConfigFiles]
+obj/Debug/net8.0/DomainApp.GeneratedMSBuildEditorConfig.editorconfig
+
+[projectReferences]
+../
+ NotificationService.Domain/NotificationService.Domain.csproj
+ NotificationService.ValueObjects/NotificationService.ValueObjects.csproj
+
+[capabilities]
+CrossPlatformExecutable
+NativeAOT
+Pack
+SupportsHotReload
