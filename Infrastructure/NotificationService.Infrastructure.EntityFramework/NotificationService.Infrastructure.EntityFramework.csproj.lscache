@@ -67,6 +67,18 @@ Configuration/
 Migrations/
  20260527112601_init2.cs
  20260527112601_init2.Designer.cs
+ 20261124123402_update2.cs
+ 20261124123402_update2.Designer.cs
+ 20261124123612_update3.cs
+ 20261124123612_update3.Designer.cs
+ 20261125165608_f.cs
+ 20261125165608_f.Designer.cs
+ 20261125170236_K.cs
+ 20261125170236_K.Designer.cs
+ 20261125170448_we.cs
+ 20261125170448_we.Designer.cs
+ 20261125211231_tete.cs
+ 20261125211231_tete.Designer.cs
  ApplicationDbContextModelSnapshot.cs
 obj/Debug/net8.0/
  .NETCoreApp,Version=v8.0.AssemblyAttributes.cs

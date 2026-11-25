@@ -2,6 +2,7 @@
 using NotificationService.Domain.Repositories.Abstractions;
 using NotificationService.Domain.Repositories.Abstractions.Repositories;
 using Microsoft.EntityFrameworkCore;
+using NotificationService.ValueObjects;
 
 namespace NotificationService.Infrastructure.EntityFramework.RepositoriesEF;
 
@@ -16,6 +17,8 @@ public class EfAdministratorRepository(ApplicationDbContext context)
             throw new ArgumentException("Username cannot be null or whitespace.", nameof(username));
 
         return await _administrators
-            .FirstOrDefaultAsync(x => x.Username.Value == username, cancellationToken);
+            .FirstOrDefaultAsync(
+                x => x.Username == new Username(username),
+                cancellationToken);
     }
 }

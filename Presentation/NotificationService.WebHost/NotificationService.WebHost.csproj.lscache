@@ -86,16 +86,26 @@ Microsoft.NETCore.App.Ref
   NotificationService.ValueObjects/obj/Debug/net8.0/ref/NotificationService.ValueObjects.dll
  Infrastructure/NotificationService.Infrastructure.EntityFramework/obj/Debug/net8.0/ref/NotificationService.Infrastructure.EntityFramework.dll
 <NUGET>/
- automapper/14.0.0/lib/net8.0/AutoMapper.dll
+ automapper/17.0.0/lib/netstandard2.0/AutoMapper.dll
+ microsoft.bcl.hashcode/6.0.0/lib/net6.0/Microsoft.Bcl.HashCode.dll
  microsoft.entityframeworkcore.abstractions/8.0.8/lib/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
  microsoft.entityframeworkcore.relational/8.0.8/lib/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
  microsoft.entityframeworkcore/8.0.8/lib/net8.0/Microsoft.EntityFrameworkCore.dll
+ microsoft.extensions.dependencyinjection.abstractions/10.0.0/lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+ microsoft.extensions.logging.abstractions/10.0.0/lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+ microsoft.extensions.options/10.0.0/lib/net8.0/Microsoft.Extensions.Options.dll
+ microsoft.extensions.primitives/10.0.0/lib/net8.0/Microsoft.Extensions.Primitives.dll
+ microsoft.identitymodel.abstractions/8.14.0/lib/net8.0/Microsoft.IdentityModel.Abstractions.dll
+ microsoft.identitymodel.jsonwebtokens/8.14.0/lib/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
+ microsoft.identitymodel.logging/8.14.0/lib/net8.0/Microsoft.IdentityModel.Logging.dll
+ microsoft.identitymodel.tokens/8.14.0/lib/net8.0/Microsoft.IdentityModel.Tokens.dll
  microsoft.openapi/1.6.14/lib/netstandard2.0/Microsoft.OpenApi.dll
  npgsql.entityframeworkcore.postgresql/8.0.8/lib/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
  npgsql/8.0.4/lib/net8.0/Npgsql.dll
  swashbuckle.aspnetcore.swagger/6.6.2/lib/net8.0/Swashbuckle.AspNetCore.Swagger.dll
  swashbuckle.aspnetcore.swaggergen/6.6.2/lib/net8.0/Swashbuckle.AspNetCore.SwaggerGen.dll
  swashbuckle.aspnetcore.swaggerui/6.6.2/lib/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+ system.diagnostics.diagnosticsource/10.0.0/lib/net8.0/System.Diagnostics.DiagnosticSource.dll
 
 [analyzerReferences]
 <NETSDK>/Sdks/
@@ -113,6 +123,8 @@ Microsoft.NETCore.App.Ref
   Microsoft.CodeAnalysis.Analyzers.dll
   Microsoft.CodeAnalysis.CSharp.Analyzers.dll
  microsoft.entityframeworkcore.analyzers/8.0.8/analyzers/dotnet/cs/Microsoft.EntityFrameworkCore.Analyzers.dll
+ microsoft.extensions.logging.abstractions/10.0.0/analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Logging.Generators.dll
+ microsoft.extensions.options/10.0.0/analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Options.SourceGeneration.dll
 
 [sdkAnalyzerConfigPolicy]
 Microsoft.NET.Sdk/analyzers

@@ -90,8 +90,22 @@ public class DomainTests
         Assert.Equal(id, first.Id);
         Assert.Equal("Second", first.DisplayName!.Value);
         Assert.Equal("https://example.com", first.ExternalUrl!.Value);
+        Assert.Equal("Second", first.ToString());
+        Assert.Equal(id.GetHashCode(), first.GetHashCode());
         Assert.True(first == second);
         Assert.False(first != second);
+    }
+
+    [Fact]
+    public void EntityAndRelatedEntitySupportProtectedPersistenceConstructors()
+    {
+        var entity = new TestEntity();
+        var relatedEntity = new TestRelatedEntity();
+
+        Assert.Equal(Guid.Empty, entity.Id);
+        Assert.Equal(Guid.Empty, relatedEntity.Id);
+        Assert.Equal(Guid.Empty.ToString(), relatedEntity.ToString());
+        Assert.Equal(Guid.Empty.GetHashCode(), relatedEntity.GetHashCode());
     }
 
     [Theory]
@@ -120,6 +134,15 @@ public class DomainTests
         Assert.Equal(first, second);
         Assert.Equal("Title", first.ToString());
         Assert.Equal("Body", body.ToString());
+        Assert.True(first.Equals((object)first));
+        Assert.False(first.Equals(null));
+        Assert.False(first.Equals(new Username("Title")));
+    }
+
+    [Fact]
+    public void ValueObjectRejectsMissingValidator()
+    {
+        Assert.Throws<ValidatorNullException>(() => new TestValueObject(null, "value"));
     }
 
     [Theory]
@@ -195,12 +218,57 @@ public class DomainTests
 
         Assert.Equal("after", administrator.Username.Value);
         Assert.True(updated);
+        Assert.Equal("Updated", notification.Title.Value);
+        Assert.Equal("Updated body", notification.Body.Value);
+        Assert.Equal(NotificationType.Warning, notification.Type);
+        Assert.False(administrator.UpdateNotification(notification));
         Assert.False(administrator.UpdateNotification(new Notification(
             recipient,
             new Title("Other"),
             new Body("Other body"),
             NotificationType.Error,
             DateTime.UtcNow)));
+    }
+
+    [Fact]
+    public void NotificationPersistenceConstructorRestoresStateAndRejectsMissingValues()
+    {
+        var id = Guid.NewGuid();
+        var recipient = new User(Guid.NewGuid(), new Username("recipient"));
+        var administrator = new Administrator(Guid.NewGuid(), new Username("admin"));
+        var relatedEntity = new RelatedEntity(Guid.NewGuid());
+        var readAt = DateTime.UtcNow;
+        var notification = new PersistedNotification(
+            id,
+            recipient,
+            new Title("Title"),
+            new Body("Body"),
+            NotificationType.Success,
+            readAt,
+            true,
+            readAt,
+            administrator,
+            new RelatedEntityTypeName("Task"),
+            relatedEntity);
+
+        Assert.Equal(id, notification.Id);
+        Assert.Same(recipient, notification.RecipientUser);
+        Assert.Equal("Title", notification.Title.Value);
+        Assert.Equal("Body", notification.Body.Value);
+        Assert.Equal(NotificationType.Success, notification.Type);
+        Assert.True(notification.IsRead);
+        Assert.Equal(readAt, notification.ReadAt);
+        Assert.Same(administrator, notification.Administrator);
+        Assert.Equal("Task", notification.RelatedEntityType!.Value);
+        Assert.Same(relatedEntity, notification.RelatedEntity);
+        Assert.Equal(readAt, notification.CreatedAt);
+
+        Assert.Throws<ArgumentNullValueException>(() => new PersistedNotification(
+            id, null, new Title("Title"), new Body("Body"), NotificationType.Info, readAt));
+        Assert.Throws<ArgumentNullValueException>(() => new PersistedNotification(
+            id, recipient, null, new Body("Body"), NotificationType.Info, readAt));
+        Assert.Throws<ArgumentNullValueException>(() => new PersistedNotification(
+            id, recipient, new Title("Title"), null, NotificationType.Info, readAt));
     }
 
     [Fact]
@@ -224,4 +292,53 @@ public class DomainTests
             new Body("Body"),
             NotificationType.Info,
             DateTime.UtcNow);
+
+    private sealed class TestEntity : NotificationService.Domain.Base.Entity<Guid>
+    {
+        public TestEntity() : base()
+        {
+        }
+    }
+
+    private sealed class TestRelatedEntity : RelatedEntity
+    {
+        public TestRelatedEntity() : base()
+        {
+        }
+    }
+
+    private sealed class TestValueObject(
+        NotificationService.ValueObjects.Base.IValidator<string>? validator,
+        string value)
+        : NotificationService.ValueObjects.Base.ValueObject<string>(validator!, value);
+
+    private sealed class PersistedNotification : Notification
+    {
+        public PersistedNotification(
+            Guid id,
+            User? recipientUser,
+            Title? title,
+            Body? body,
+            NotificationType type,
+            DateTime createdAt,
+            bool isRead = false,
+            DateTime? readAt = null,
+            Administrator? administrator = null,
+            RelatedEntityTypeName? relatedEntityType = null,
+            RelatedEntity? relatedEntity = null)
+            : base(
+                id,
+                recipientUser!,
+                title!,
+                body!,
+                type,
+                createdAt,
+                isRead,
+                readAt,
+                administrator,
+                relatedEntityType,
+                relatedEntity)
+        {
+        }
+    }
 }

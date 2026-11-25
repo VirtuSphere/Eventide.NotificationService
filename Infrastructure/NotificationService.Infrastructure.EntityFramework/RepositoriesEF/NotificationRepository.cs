@@ -9,12 +9,30 @@ public class EfNotificationRepository(ApplicationDbContext context)
 {
     private readonly DbSet<Notification> _notifications = context.Set<Notification>();
 
+    private IQueryable<Notification> NotificationsWithRelations
+        => _notifications
+            .Include(x => x.RecipientUser)
+            .Include(x => x.Administrator)
+            .Include(x => x.RelatedEntity);
+
+    public override async Task<IReadOnlyCollection<Notification>> GetAllAsync(
+        CancellationToken cancellationToken = default)
+        => await NotificationsWithRelations
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync(cancellationToken);
+
+    public override async Task<Notification?> GetByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken)
+        => await NotificationsWithRelations
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
     public async Task<IEnumerable<Notification>> GetNotificationsByUserIdAsync(
         Guid userId, 
         CancellationToken cancellationToken,
         bool onlyUnread = false)
     {
-        var query = _notifications
+        var query = NotificationsWithRelations
             .Where(x => EF.Property<Guid>(x, "RecipientUserId") == userId);
 
         if (onlyUnread)
@@ -47,7 +65,7 @@ public class EfNotificationRepository(ApplicationDbContext context)
         Guid administratorId,
         CancellationToken cancellationToken)
     {
-        return await _notifications
+        return await NotificationsWithRelations
             .Where(x => EF.Property<Guid?>(x, "AdministratorId") == administratorId)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync(cancellationToken);

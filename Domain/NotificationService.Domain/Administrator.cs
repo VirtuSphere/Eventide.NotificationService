@@ -32,14 +32,29 @@ public class Administrator(Guid id, Username username) : Entity<Guid>(id)
         _notifications.Remove(notification);
         return true;
     }
-    public bool UpdateNotification(Notification notification, Title? title = null, Body? body = null, NotificationType? type = null, RelatedEntityTypeName? relatedEntityType = null, RelatedEntity? relatedEntity = null)
-    {
-        if (notification is null) throw new ArgumentNullValueException(nameof(notification));
+public bool UpdateNotification(
+    Notification notification,
+    Title? title = null,
+    Body? body = null,
+    NotificationType? type = null,
+    RelatedEntityTypeName? relatedEntityType = null,
+    RelatedEntity? relatedEntity = null)
+{
+    if (notification is null)
+        throw new ArgumentNullValueException(nameof(notification));
 
-        if (!_notifications.Contains(notification)) return false;
+    if (!_notifications.Contains(notification))
+        return false;
 
-        bool isUpdated = title != null || body != null || type != null || relatedEntityType != null || relatedEntity != null;
-        return isUpdated;
-    }
+    var updated = notification.Update(
+        notification.RecipientUser,
+        title ?? notification.Title,
+        body ?? notification.Body,
+        type ?? notification.Type,
+        relatedEntityType,
+        relatedEntity);
+
+    return updated;
+}
 
 }

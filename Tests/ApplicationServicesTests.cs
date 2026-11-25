@@ -225,6 +225,27 @@ public class ApplicationServicesTests
     }
 
     [Fact]
+    public async Task UserServiceGetsUserAndRejectsUsernameOwnedByAnotherUser()
+    {
+        var repository = new Mock<IUserRepository>();
+        var user = new User(Guid.NewGuid(), new Username("alice"));
+        var otherUser = new User(Guid.NewGuid(), new Username("taken"));
+        repository.Setup(x => x.GetByIdAsync(user.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user);
+        repository.Setup(x => x.GetUserByUsernameAsync("alice", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user);
+        repository.Setup(x => x.GetUserByUsernameAsync("taken", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(otherUser);
+
+        var service = new UserApplicationService(repository.Object, _mapper);
+
+        Assert.Equal("alice", (await service.GetModelByIdAsync(user.Id))!.Username);
+        Assert.Null(await service.GetModelByIdAsync(Guid.NewGuid()));
+        Assert.True(await service.UpdateModelAsync(new UserModel(user.Id, "alice")));
+        Assert.False(await service.UpdateModelAsync(new UserModel(user.Id, "taken")));
+    }
+
+    [Fact]
     public async Task AdministratorServiceCoversCreateListGetAndMissingBranches()
     {
         var repository = new Mock<IAdministratorRepository>();
@@ -248,6 +269,31 @@ public class ApplicationServicesTests
     }
 
     [Fact]
+    public async Task AdministratorServiceGetsByUsernameAndRejectsConflictingUpdates()
+    {
+        var repository = new Mock<IAdministratorRepository>();
+        var administrator = new Administrator(Guid.NewGuid(), new Username("admin"));
+        var otherAdministrator = new Administrator(Guid.NewGuid(), new Username("taken"));
+        repository.Setup(x => x.GetAdministratorByUsernameAsync("admin", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(administrator);
+        repository.Setup(x => x.GetAdministratorByUsernameAsync("missing", It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Administrator?)null);
+        repository.Setup(x => x.GetAdministratorByUsernameAsync("taken", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(otherAdministrator);
+        repository.Setup(x => x.GetByIdAsync(administrator.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(administrator);
+        repository.Setup(x => x.GetByIdAsync(It.Is<Guid>(id => id != administrator.Id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Administrator?)null);
+
+        var service = new AdministratorApplicationService(repository.Object, _mapper);
+
+        Assert.Equal("admin", (await service.GetAdministratorByUsernameAsync("admin"))!.Username);
+        Assert.Null(await service.GetAdministratorByUsernameAsync("missing"));
+        Assert.False(await service.UpdateModelAsync(new AdministratorModel(Guid.NewGuid(), "new-name")));
+        Assert.False(await service.UpdateModelAsync(new AdministratorModel(administrator.Id, "taken")));
+    }
+
+    [Fact]
     public async Task RelatedEntityServiceCoversCreateDeleteAndMissingBranches()
     {
         var repository = new Mock<IRelatedEntityRepository>();
@@ -266,6 +312,28 @@ public class ApplicationServicesTests
         Assert.False(await service.DeleteModelAsync(Guid.NewGuid()));
         Assert.False(await service.UpdateModelAsync(
             new RelatedEntityModel(Guid.NewGuid(), "missing", null)));
+    }
+
+    [Fact]
+    public async Task RelatedEntityServiceTreatsBlankOptionalFieldsAsNull()
+    {
+        var repository = new Mock<IRelatedEntityRepository>();
+        RelatedEntity? stored = null;
+        repository.Setup(x => x.AddAsync(It.IsAny<RelatedEntity>(), It.IsAny<CancellationToken>()))
+            .Callback<RelatedEntity, CancellationToken>((entity, _) => stored = entity)
+            .Returns(Task.CompletedTask);
+        repository.Setup(x => x.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => stored);
+
+        var service = new RelatedEntityApplicationService(repository.Object, _mapper);
+        var created = await service.CreateModelAsync(new CreateRelatedEntityModel(" ", null));
+
+        Assert.NotNull(created);
+        Assert.Null(created.DisplayName);
+        Assert.Null(created.ExternalUrl);
+        Assert.True(await service.UpdateModelAsync(new RelatedEntityModel(created.Id, null, " ")));
+        Assert.Null(stored!.DisplayName);
+        Assert.Null(stored.ExternalUrl);
     }
 
     [Fact]
@@ -341,5 +409,64 @@ public class ApplicationServicesTests
         Assert.Single(await service.GetModelsAsync());
         Assert.Null(await service.CreateModelAsync(new CreateNotificationModel(
             Guid.NewGuid(), null, "title", "body", NotificationType.Info, null, null)));
+    }
+
+    [Fact]
+    public async Task NotificationServiceHandlesOptionalRelationsAndMissingReferences()
+    {
+        var notifications = new Mock<INotificationRepository>();
+        var users = new Mock<IUserRepository>();
+        var administrators = new Mock<IAdministratorRepository>();
+        var relatedEntities = new Mock<IRelatedEntityRepository>();
+        var recipient = new User(Guid.NewGuid(), new Username("recipient"));
+        var administrator = new Administrator(Guid.NewGuid(), new Username("admin"));
+        var relatedEntity = new RelatedEntity(Guid.NewGuid());
+        users.Setup(x => x.GetByIdAsync(recipient.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(recipient);
+        administrators.Setup(x => x.GetByIdAsync(administrator.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(administrator);
+        relatedEntities.Setup(x => x.GetByIdAsync(relatedEntity.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(relatedEntity);
+        Notification? stored = null;
+        notifications.Setup(x => x.AddAsync(It.IsAny<Notification>(), It.IsAny<CancellationToken>()))
+            .Callback<Notification, CancellationToken>((notification, _) => stored = notification)
+            .Returns(Task.CompletedTask);
+        notifications.Setup(x => x.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => stored);
+
+        var service = new NotificationApplicationService(
+            notifications.Object,
+            users.Object,
+            administrators.Object,
+            relatedEntities.Object,
+            _mapper);
+
+        var missingAdministrator = await service.CreateModelAsync(new CreateNotificationModel(
+            recipient.Id, Guid.NewGuid(), "title", "body", NotificationType.Info, null, null));
+        var missingRelatedEntity = await service.CreateModelAsync(new CreateNotificationModel(
+            recipient.Id, null, "title", "body", NotificationType.Info, null, Guid.NewGuid()));
+        Assert.Null(missingAdministrator);
+        Assert.Null(missingRelatedEntity);
+
+        var created = await service.CreateModelAsync(new CreateNotificationModel(
+            recipient.Id,
+            administrator.Id,
+            "title",
+            "body",
+            NotificationType.Info,
+            "Task",
+            relatedEntity.Id));
+        Assert.NotNull(created);
+        Assert.Equal(administrator.Id, stored!.Administrator!.Id);
+        Assert.Equal(relatedEntity.Id, stored.RelatedEntity!.Id);
+
+        Assert.False(await service.UpdateModelAsync(stored.Id, new CreateNotificationModel(
+            recipient.Id,
+            null,
+            "title",
+            "body",
+            NotificationType.Info,
+            "Task",
+            Guid.NewGuid())));
     }
 }
